@@ -1,0 +1,25 @@
+# Copyright (c) 2023, Bennett Samowich <bennett@foolean.org>
+# All rights reserved
+# SPDX short identifier: BSD-3-Clause
+---
+
+
+- name: Ensure rsync server is not installed (CIS)
+  become: true
+  ansible.builtin.package:
+    name:
+      - 'rsync-daemon'
+    state: absent
+  when:
+    - ansible_os_family == 'RedHat'
+
+#- name: Collecting package facts
+#  ansible.builtin.package_facts:
+#    manager: auto
+#  when: ansible_facts.packages is not defined
+#
+#- name: Ensure the rsyncd service is masked
+#  ansible.builtin.systemd:
+#    name: 'rsyncd'
+#    masked: true
+#  when: 'rsync-daemon' in ansible_facts.packages
