@@ -3,23 +3,20 @@
 # SPDX short identifier: BSD-3-Clause
 ---
 
+# We put the entire role in a block so we can create
+# a role specific tag, which saves the caller from
+# having to do so in their playbook.
+- name: Role foolean/rsync
+  block:
 
-- name: Ensure rsync server is not installed (CIS)
-  become: true
-  ansible.builtin.package:
-    name:
-      - 'rsync-daemon'
-    state: absent
-  when:
-    - ansible_os_family == 'RedHat'
+    - name: Ensure rsync server is not installed (CIS)
+      become: true
+      ansible.builtin.package:
+        name: 'rsync-daemon'
+        state: absent
+      when:
+        - ansible_os_family == 'RedHat'
 
-#- name: Collecting package facts
-#  ansible.builtin.package_facts:
-#    manager: auto
-#  when: ansible_facts.packages is not defined
-#
-#- name: Ensure the rsyncd service is masked
-#  ansible.builtin.systemd:
-#    name: 'rsyncd'
-#    masked: true
-#  when: 'rsync-daemon' in ansible_facts.packages
+  # Tags to be applied to this role (block)
+  tags:
+    - 'role_foolean_rsync'
