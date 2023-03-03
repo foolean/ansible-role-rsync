@@ -9,13 +9,18 @@
 - name: Role foolean/rsync
   block:
 
-    - name: Ensure rsync server is not installed (CIS)
+    - name: Set OS variables
+      ansible.builtin.include_vars:
+        file: "{{ item }}"
+      with_first_found:
+        - "{{ ansible_os_family|lower }}.yml"
+        - "default.yml"
+
+    - name: CIS | Ensure rsync server is not installed
       become: true
       ansible.builtin.package:
-        name: 'rsync-daemon'
+        name: "{{ rsync_packages }}"
         state: absent
-      when:
-        - ansible_os_family == 'RedHat'
 
   # Tags to be applied to this role (block)
   tags:
